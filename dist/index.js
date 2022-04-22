@@ -3,12 +3,12 @@ const fs = require("fs-extra");
 const readlineSync = require('readline-sync');
 var parseString = require('xml2js').parseString;
 let log4js = require("log4js");
-const xmlConverter = function (date) {
-    const utc_days = Math.floor(parseInt(date - 25569));
+var moment = require('moment');
+const xmlDateConverter = function (date) {
+    const utc_days = Math.floor(parseInt(date) - 25569);
     const utc_value = utc_days * 86400;
     return moment.unix(utc_value);
 };
-var moment = require('moment');
 log4js.configure({
     appenders: {
         file: { type: 'fileSync', filename: 'logs/debug.log' }
@@ -149,7 +149,7 @@ function generateBank(fileType) {
                 date = moment(trans[0].substring(0, 10), "YYYY-MM-DD");
             }
             else if (fileType === "xml") {
-                date = xmlConverter(trans[0]);
+                date = xmlDateConverter(trans[0]);
             }
             if (isNaN(date)) {
                 logger.error("Invalid date provided: " + trans);
